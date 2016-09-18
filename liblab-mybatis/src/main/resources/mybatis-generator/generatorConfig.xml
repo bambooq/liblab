@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+ <!--   <classPathEntry
+            location="D:/ItWork/maven_repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar"/>
+-->
+    <context id="nova2forward" targetRuntime="MyBatis3">
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="prefix" value="cn.zgjkw.nova2forward"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.163.150:3306/mybatis"
+                        userId="root"
+                        password="Nlsoft_2016"/>
+
+        <javaModelGenerator targetPackage="cn.com.nlsoft.model"
+                            targetProject="${dao.target.dir}"/>
+        
+        <sqlMapGenerator targetPackage="cn.com.nlsoft.dao"
+                         targetProject="${dao.target.dir}"/>
+        
+        <javaClientGenerator targetPackage="cn.com.nlsoft.dao"
+                             targetProject="${dao.target.dir}"
+                             type="XMLMAPPER"/>
+        
+        <table tableName="account" ></table>
+    </context>
+</generatorConfiguration>
