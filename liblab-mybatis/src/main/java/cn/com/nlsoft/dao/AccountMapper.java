@@ -29,4 +29,6 @@ public interface AccountMapper {
     int updateByPrimaryKey(Account record);
 
     int getId();
+
+    int getId2();
 }
