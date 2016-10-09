@@ -19,7 +19,11 @@
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
     </resultMap>
 
-    <select id="getId" resultType="int" flushCache="true" useCache="false" statementType="STATEMENT">
+    <select id="getId" resultType="int" flushCache="true" useCache="false">
+        select getId()
+    </select>
+
+    <select id="getId2" resultType="int" flushCache="false" useCache="false">
         select getId()
     </select>
 
@@ -87,7 +91,7 @@
         userid, email, firstname, lastname, status, addr1, addr2, city, state, zip, country,
         phone
     </sql>
-    <select id="selectByExample" parameterType="cn.com.nlsoft.model.AccountExample" resultMap="BaseResultMap">
+    <select id="selectByExample" parameterType="cn.com.nlsoft.model.AccountExample" resultMap="BaseResultMap" useCache="true">
         select
         <if test="distinct">
             distinct

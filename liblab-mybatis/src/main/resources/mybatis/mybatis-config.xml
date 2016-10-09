@@ -4,6 +4,7 @@
     <properties resource="db.properties" />
 
     <settings>
+        <!-- 开启二级缓存 -->
         <setting name="cacheEnabled" value="true"/>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="defaultStatementTimeout" value="20000"/>
