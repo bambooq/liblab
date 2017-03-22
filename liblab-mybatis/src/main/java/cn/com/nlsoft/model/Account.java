@@ -1,8 +1,6 @@
 package cn.com.nlsoft.model;
 
-import java.io.Serializable;
-
-public class Account implements Serializable {
+public class Account {
     private String userid;
 
     private String email;
