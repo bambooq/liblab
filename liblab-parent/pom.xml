@@ -19,13 +19,22 @@
         <jodatime.version>2.9.4</jodatime.version>
         <gson.version>2.7</gson.version>
         <mybaits.generator.version>1.3.4</mybaits.generator.version>
-        <mybaits.version>3.4.1</mybaits.version>
-        <mybaits.spring.version>1.3.0</mybaits.spring.version>
-        <spring.version>4.3.2.RELEASE</spring.version>
+        <mybaits.version>3.4.4</mybaits.version>
+        <mybaits.spring.version>1.3.1</mybaits.spring.version>
+        <redis.version>2.9.0</redis.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
+        <javax.servlet>2.5</javax.servlet>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${javax.servlet}</version>
+            </dependency>
+
             <!-- mysql -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -84,10 +93,26 @@
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybaits.spring.version}</version>
             </dependency>
+            <!-- redis -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
             <!-- spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aspects</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -97,7 +122,32 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-messaging</artifactId>
                 <version>${spring.version}</version>
             </dependency>
         </dependencies>
