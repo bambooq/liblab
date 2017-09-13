@@ -151,8 +151,8 @@ public class AccountMapperTest {
         SqlSession session = sqlSessionFactory.openSession(false);
         try {
             Account account = new Account();
-            account.setUserid("3");
-            account.setFirstname("ted");
+            account.setUserid("5");
+//            account.setFirstname("ted");
             session.insert("cn.com.nlsoft.dao.AccountMapper.insert", account);
             // 提交事务，无此略未执行此语句，默认回滚
             session.commit();
