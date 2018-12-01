@@ -7,3 +7,4 @@ liblab-java/target/
 liblab-activemq-spring/target/
 liblab-mybatis-spring/target/
 liblab-netty/target/
+liblab-jexl/target

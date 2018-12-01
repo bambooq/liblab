@@ -32,7 +32,6 @@
         <module>liblab-joda</module>
         <module>liblab-mybatis</module>
         <module>liblab-mybatis-spring</module>
-        <module>liblab-netty</module>
     </modules>
 
     <dependencyManagement>
@@ -42,6 +41,12 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
                 <version>${javax.servlet}</version>
+            </dependency>
+            <!-- java expression language -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-jexl3</artifactId>
+                <version>3.1</version>
             </dependency>
 
             <!-- mysql -->
