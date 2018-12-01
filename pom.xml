@@ -32,6 +32,7 @@
         <module>liblab-joda</module>
         <module>liblab-mybatis</module>
         <module>liblab-mybatis-spring</module>
+        <module>liblab-netty</module>
     </modules>
 
     <dependencyManagement>
