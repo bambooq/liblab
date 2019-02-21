@@ -2,6 +2,7 @@ package cn.com.nlsoft;
 
 import cn.com.nlsoft.bean.Address;
 import cn.com.nlsoft.bean.Employee;
+import cn.com.nlsoft.bean.User;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -9,10 +10,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,6 +27,8 @@ import java.util.*;
  * https://www.journaldev.com/2324/jackson-json-java-parser-api-example-tutorial
  */
 public class JacksonObjectMapperTest {
+
+    private final static Logger LOG = LoggerFactory.getLogger(JacksonObjectMapperTest.class);
 
     @Test
     public void testJson2Object() throws Exception {
@@ -33,7 +40,7 @@ public class JacksonObjectMapperTest {
         ObjectMapper objectMapper = new ObjectMapper();
         //convert json string to object
         Employee emp = objectMapper.readValue(jsonData, Employee.class);
-        System.out.println("Employee Object\n" + emp);
+        LOG.info("\nEmployee Object\n" + emp);
     }
 
     @Test
@@ -50,7 +57,7 @@ public class JacksonObjectMapperTest {
         System.out.println("Employee JSON is\n" + stringEmp);
     }
 
-    public static Employee createEmployee() {
+    private static Employee createEmployee() {
 
         Employee emp = new Employee();
         emp.setId(100);
@@ -90,8 +97,7 @@ public class JacksonObjectMapperTest {
         System.out.println("Map is: " + myMap);
 
         //another way
-        myMap = objectMapper.readValue(mapData, new TypeReference<HashMap<String, String>>() {
-        });
+        myMap = objectMapper.readValue(mapData, new TypeReference<HashMap<String, String>>() {});
         System.out.println("Map using TypeReference: " + myMap);
     }
 
@@ -235,5 +241,23 @@ public class JacksonObjectMapperTest {
 
         jsonGenerator.flush();
         jsonGenerator.close();
+    }
+
+    /**
+     * 测试注解 <br>
+     * @JsonIgnore 此注解用于属性上，作用是进行JSON操作时忽略该属性。
+     * @JsonFormat 此注解用于属性上，作用是把Date类型直接转化为想要的格式，如@JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")。
+     * @JsonProperty 此注解用于属性上，作用是把该属性的名称序列化为另外一个名称，如把trueName属性序列化为name，@JsonProperty("name")
+     */
+    @Test
+    public void testAnnotation() throws JsonProcessingException {
+        User user = new User();
+        user.setAge(10);
+        user.setBirthday(new Date());
+        user.setEmail("tom@sina.com");
+        user.setName("tom");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(user);
+        LOG.info(json);
     }
 }
