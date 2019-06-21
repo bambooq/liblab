@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public class JacksonObjectMapperTest {
         Employee emp = objectMapper.readValue(jsonData, Employee.class);
         LOG.info("\nEmployee Object\n" + emp);
     }
+
 
     @Test
     public void testObject2Json() throws Exception {
@@ -103,10 +105,11 @@ public class JacksonObjectMapperTest {
 
     @Test
     public void testJsonOps() throws IOException {
-        byte[] jsonData = Files.readAllBytes(Paths.get("D:/ItWork/javaProject/liblab/liblab-jackson/target/test-classes/employee.json"));
+        byte[] jsonData = Files.readAllBytes(Paths.get("E:\\nd\\source_code\\liblab\\liblab-jackson\\src\\main\\resources\\employee.json"));
         ObjectMapper objectMapper = new ObjectMapper();
         //create JsonNode
         JsonNode rootNode = objectMapper.readTree(jsonData);
+
         //update JSON data
         ((ObjectNode) rootNode).put("id", 500);
         //add new key value
@@ -116,6 +119,35 @@ public class JacksonObjectMapperTest {
         ((ObjectNode) rootNode).remove("properties");
         objectMapper.writeValue(new File("updated_emp.json"), rootNode);
     }
+
+
+    @Test
+    public void testJson2Object1() throws Exception {
+        byte[] jsonData = Files.readAllBytes(Paths.get("E:/nd/source_code/liblab/liblab-jackson/target/test-classes/今日三农积分榜流水.txt"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode items = rootNode.get("items");
+        int produce = 0;
+        int consume = 0;
+        int count = 0;
+        for (Iterator<JsonNode> elements = items.elements(); elements.hasNext();) {
+            JsonNode next = elements.next();
+            String content = next.get("content").asText().replace("\\", "");
+//            LOG.info(content);
+            JsonNode jsonContent = objectMapper.readTree(content);
+            if (jsonContent.get("orderType").asInt() == 1) {
+                produce += jsonContent.get("amount").asInt();
+            } else {
+                consume += jsonContent.get("amount").asInt();
+            }
+            count ++;
+        }
+        LOG.info("流水条数：" + count);
+        LOG.info("获得积分：" + produce);
+        LOG.info("消费积分：" + consume);
+//        2019-1-27 23:59:59
+    }
+
 
     @Test
     public void testStreamParse() throws IOException {
@@ -259,5 +291,128 @@ public class JacksonObjectMapperTest {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(user);
         LOG.info(json);
+    }
+
+
+    @Test
+    public void testJsonOps1() throws IOException {
+        byte[] jsonData = Files.readAllBytes(Paths.get("E:\\nd\\source_code\\liblab\\liblab-jackson\\src\\main\\resources\\snwjt_router.json"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        //create JsonNode
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        objectNode.putArray("items");
+
+        for (Iterator<JsonNode> it = rootNode.iterator(); it.hasNext();) {
+            JsonNode next = it.next();
+            if (next.get("serviceId").asText().equals("rank_admin")) {
+                ((ArrayNode) objectNode.get("items")).add(next);
+            }
+        }
+
+        /*
+        //update JSON data
+        ((ObjectNode) rootNode).put("id", 500);
+        //add new key value
+        ((ObjectNode) rootNode).put("test", "test value");
+        //remove existing key
+        ((ObjectNode) rootNode).remove("role");
+        ((ObjectNode) rootNode).remove("properties");
+
+
+         */
+        objectMapper.writeValue(new File("snwjt_router_dest.json"), objectNode);
+
+    }
+
+    @Test
+    public void testTenantBind() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode result = objectMapper.createObjectNode();
+        result.putArray("delete");
+        result.putArray("bind");
+
+        byte[] jsonData = Files.readAllBytes(Paths.get("E:\\nd\\source_code\\liblab\\liblab-jackson\\src\\main\\resources\\preproduction_tenant.json"));
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode items = rootNode.get("items");
+        Map<String, Integer> appIdCounter = new HashMap<>();
+        for (Iterator<JsonNode> it = items.iterator(); it.hasNext();) {
+            JsonNode item = it.next();
+            // 不用处理一个projectId对应一个appId
+            if (item.get("app_ids").size() == 1) {
+                continue;
+            }
+//            System.out.println(item);
+            JsonNode appIds = item.get("app_ids");
+            for (Iterator<JsonNode> itApp = appIds.iterator(); itApp.hasNext();) {
+                JsonNode next = itApp.next();
+                String appId = next.get("app_id").asText();
+                if (appIdCounter.containsKey(appId)) {
+                    appIdCounter.put(appId, appIdCounter.get(appId).intValue() + 1);
+                } else {
+                    appIdCounter.put(appId, 1);
+                }
+            }
+        }
+
+        for (Iterator<JsonNode> it = items.iterator(); it.hasNext();) {
+            JsonNode item = it.next();
+            // 不用处理一个projectId对应一个appId
+            if (item.get("app_ids").size() == 1) {
+                continue;
+            }
+            JsonNode appIds = item.get("app_ids");
+            Map<String, Boolean> appFlag = new HashMap<>();
+            Map<String, String> appTenant = new HashMap<>();
+            int cannotDelCount = 0;
+            for (Iterator<JsonNode> itApp = appIds.iterator(); itApp.hasNext(); ) {
+                JsonNode app = itApp.next();
+                String appId = app.get("app_id").asText();
+                boolean hasData = app.get("has_data").asBoolean();
+                String tenantId = app.get("tenant_id").asText();
+                appTenant.put(appId, tenantId);
+                if (appIdCounter.get(appId) == 1) {
+                    if (hasData) {
+                        appFlag.put(appId, false);
+                        cannotDelCount ++;
+                    } else {
+                        appFlag.put(appId, true);
+                    }
+                } else {
+                    appFlag.put(appId, false);
+                    cannotDelCount++;
+                }
+            }
+            if (cannotDelCount > 1) {
+                System.out.println("需要人工判断 - " + item);
+                continue;
+            }
+
+            // 拼装指令
+            StringBuffer bindList = new StringBuffer();
+            String bindTenantId = null;
+            for (Iterator<String> iterator = appFlag.keySet().iterator(); iterator.hasNext();) {
+                String appId = iterator.next();
+                if (cannotDelCount == 0) {
+                    if (bindTenantId == null) {
+                        bindTenantId = appTenant.get(appId);
+                        continue;
+                    } else {
+                        ((ArrayNode) result.get("delete")).add(appTenant.get(appId));
+                        bindList.append(appId).append(",");
+                    }
+                } else {
+                    if (appFlag.get(appId)) {
+                        ((ArrayNode) result.get("delete")).add(appTenant.get(appId));
+                        bindList.append(appId).append(",");
+                    } else {
+                        bindTenantId = appTenant.get(appId);
+                    }
+                }
+            }
+            ((ArrayNode) result.get("bind")).add(bindTenantId + "," + bindList.toString().substring(0, bindList.toString().length() - 1));
+        }
+        objectMapper.writeValue(new File("preproduction_tenant_cmd.json"), result);
     }
 }
