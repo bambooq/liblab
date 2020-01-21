@@ -24,7 +24,7 @@
         <mybatis.version>3.5.0</mybatis.version>
         <mybaits.spring.version>2.0.0</mybaits.spring.version>
         <redis.version>3.0.1</redis.version>
-        <spring.version>5.1.4.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
         <javax.servlet>2.5</javax.servlet>
     </properties>
 
