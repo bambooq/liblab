@@ -18,7 +18,7 @@ public class App {
         JexlEngine jexl = new JexlBuilder().create();
 
         // Create an expression
-        String express = "cat.owner.name eq 'Clark' & cat.name eq '1Tom'";
+        String express = "cat.owner.name eq 'Clark' && cat.name eq 'Tom'";
         JexlExpression e = jexl.createExpression(express);
 
         // Create a context and add data
