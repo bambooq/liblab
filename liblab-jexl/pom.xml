@@ -11,11 +11,18 @@
 
     <artifactId>liblab-jexl</artifactId>
 
+    <properties>
+        <jexl.version>3.1</jexl.version>
+    </properties>
+
     <dependencies>
+        <!-- java expression language -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-jexl3</artifactId>
+            <version>${jexl.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

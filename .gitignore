@@ -1,11 +1,3 @@
 .idea
 *.iml
-liblab-gson/target/
-liblab-joda/target/
-liblab-mybatis/target/
-liblab-java/target/
-liblab-activemq-spring/target/
-liblab-mybatis-spring/target/
-liblab-netty/target/
-liblab-jexl/target
-liblab-jackson/target
+target

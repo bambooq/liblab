@@ -11,10 +11,16 @@
 
     <artifactId>liblab-jackson</artifactId>
 
+    <properties>
+        <jackson.version>2.12.3</jackson.version>
+    </properties>
+
     <dependencies>
+        <!-- jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
